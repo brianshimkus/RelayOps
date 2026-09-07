@@ -1,0 +1,19 @@
+services:
+  db:
+    image: pgvector/pgvector:0.8.6-pg17
+    environment:
+      POSTGRES_DB: relayops
+      POSTGRES_USER: relayops
+      POSTGRES_PASSWORD: relayops
+    ports:
+      - "5432:5432"
+    volumes:
+      - relayops_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U relayops -d relayops"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  relayops_db:
