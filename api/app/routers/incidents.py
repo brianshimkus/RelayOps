@@ -2,6 +2,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from app.database import get_session
@@ -16,7 +17,11 @@ Db = Annotated[Session, Depends(get_session)]
 def create_incident(payload: IncidentCreate, db: Db) -> Incident:
     incident = Incident.model_validate(payload)
     db.add(incident)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Invalid tenant_id: tenant does not exist")
     db.refresh(incident)
     return incident
 
