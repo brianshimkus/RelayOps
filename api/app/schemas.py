@@ -21,3 +21,10 @@ class IncidentRead(SQLModel):
     status: str
     created_at: datetime
     updated_at: datetime
+
+class EvidenceRead(SQLModel):
+    citation_id: str
+    kind: str
+    source: str
+    content: str
+    observed_at: datetime

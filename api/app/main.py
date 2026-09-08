@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import incidents
+from app.routers import incidents, scenarios
 
 
 @asynccontextmanager
@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(incidents.router, prefix="/api/v1")
-
+app.include_router(scenarios.router, prefix="/api/v1")
 
 @app.get("/health")
 def health() -> dict[str, str]:

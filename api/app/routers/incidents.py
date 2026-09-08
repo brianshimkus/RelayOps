@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 from app.database import get_session
-from app.models import Incident
-from app.schemas import IncidentCreate, IncidentRead
+from app.models import Evidence, Incident
+from app.schemas import EvidenceRead, IncidentCreate, IncidentRead
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
 Db = Annotated[Session, Depends(get_session)]
@@ -38,3 +38,15 @@ def get_incident(incident_id: UUID, db: Db) -> Incident:
     if not incident:
         raise HTTPException(status_code=404, detail="Incident not found")
     return incident
+
+@router.get("/{incident_id}/evidence", response_model=list[EvidenceRead])
+def list_evidence(incident_id: UUID, db: Db) -> list[Evidence]:
+    incident = db.get(Incident, incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    query = (
+        select(Evidence)
+        .where(Evidence.incident_id == incident_id)
+        .order_by(Evidence.observed_at, Evidence.citation_id)
+    )
+    return list(db.exec(query).all())
