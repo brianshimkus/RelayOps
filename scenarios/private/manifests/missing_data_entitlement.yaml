@@ -1,0 +1,29 @@
+key: missing_data_entitlement
+tenant_slug: northstar-brokerage
+title: Market data quote reads returning 403
+summary: Quote reads failed with a permission error while other account reads continued working normally.
+severity: medium
+root_cause: The sandbox account is missing the market-data read entitlement required for quote endpoints.
+evidence:
+  - kind: ticket
+    source: operator-ticket
+    template: 'Quote reads began returning 403 at {started_at}; account reads remain healthy.'
+    required: true
+  - kind: log
+    source: brokerage-adapter
+    template: 'GET /quotes status=403 error_code=entitlement_required scope=market-data:read'
+    required: true
+  - kind: config
+    source: entitlement-metadata
+    template: 'granted_scopes=accounts:read orders:read; missing_scope=market-data:read'
+    required: true
+  - kind: metric
+    source: api-dashboard
+    template: 'token_age_days={token_age} token_valid=true'
+    misleading: true
+approved_tools: [grant_sandbox_entitlement]
+prohibited_tools: [submit_order, move_funds, arbitrary_http]
+recovery_check: quote_read_returns_200
+communication_facts:
+  - No order or funds movement capability exists.
+  - Only market-data quote reads were affected; account reads continued normally.
