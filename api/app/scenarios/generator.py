@@ -28,6 +28,8 @@ def inject_scenario(db: Session, key: str, seed: int) -> Incident:
         "retry_count": rng.randint(3, 8),
         "gap_duration_minutes": rng.randint(5, 45),
         "missing_event_count": rng.randint(2, 20),
+        "timeout_count": rng.randint(3, 10),
+        "timeout_ms": rng.randint(10000, 45000),
     }
 
     incident = Incident(
