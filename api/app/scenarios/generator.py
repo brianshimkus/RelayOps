@@ -23,6 +23,7 @@ def inject_scenario(db: Session, key: str, seed: int) -> Incident:
         "event_id": f"evt_{rng.randint(100000, 999999)}",
         "batch_id": f"batch_{rng.randint(1000, 9999)}",
         "schema_version": f"{rng.randint(2, 5)}.0",
+        "mismatch_cents": rng.randint(500, 25000),
     }
 
     incident = Incident(
