@@ -21,6 +21,8 @@ def inject_scenario(db: Session, key: str, seed: int) -> Incident:
         "token_age": rng.randint(31, 45),
         "expired_at": (started - timedelta(hours=rng.randint(1, 12))).isoformat(),
         "event_id": f"evt_{rng.randint(100000, 999999)}",
+        "batch_id": f"batch_{rng.randint(1000, 9999)}",
+        "schema_version": f"{rng.randint(2, 5)}.0",
     }
 
     incident = Incident(
