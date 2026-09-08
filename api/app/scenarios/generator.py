@@ -26,6 +26,8 @@ def inject_scenario(db: Session, key: str, seed: int) -> Incident:
         "mismatch_cents": rng.randint(500, 25000),
         "queue_depth": rng.randint(200, 2000),
         "retry_count": rng.randint(3, 8),
+        "gap_duration_minutes": rng.randint(5, 45),
+        "missing_event_count": rng.randint(2, 20),
     }
 
     incident = Incident(
